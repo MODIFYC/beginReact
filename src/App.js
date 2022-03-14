@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useMemo, useCallback } from 'react';
 import Hello from './Hello';
 import Wrapper from './Wrapper';
 import Counter from './Counter';
@@ -6,11 +6,6 @@ import InputSample from './InputSample';
 import AudioSample from './AudioSample';
 import UserList from './UserList';
 import CreateUser from './CreateUser';
-
-function countActiveUsers(users) {
-  console.log('활성 사용자 수를 세는중...');
-  return users.filter(user => user.active).length;
-}
 
 function App() {
   //name 정의
@@ -86,6 +81,7 @@ function App() {
     setUsers(users.filter(user => user.id !== id));
   };
 
+  //user modify
   const onToggle = id => {
     setUsers(
       users.map(user =>
@@ -93,6 +89,14 @@ function App() {
       )
     );
   };
+
+  //useMemo
+  const countActiveUsers = () => {
+    console.log('count active users..');
+    return users.filter(user => user.active).length;
+  }
+
+  const count = useMemo(() => countActiveUsers(users), [users]);
 
   return (
     <>
@@ -117,6 +121,7 @@ function App() {
         onCreate={onCreate}
       />
       <UserList users={users} onRemove={onRemove} onToggle={onToggle} />
+      {/* <div>활성사용자 수 : {count}</div> */}
     </>
   );
 }
